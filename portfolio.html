@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RapidDev — Roblox Scripter Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0b10;
+    --surface: #111318;
+    --surface2: #181b22;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --accent: #00e5a0;
+    --accent2: #5b6aff;
+    --accent3: #ff6b6b;
+    --text: #f0f0f0;
+    --muted: #7a7e8a;
+    --muted2: #555a66;
+    --mono: 'Space Mono', monospace;
+    --display: 'Syne', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--display);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Grid background ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Glow orbs ── */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb1 { width: 500px; height: 500px; background: rgba(0,229,160,0.06); top: -100px; right: -100px; }
+  .orb2 { width: 400px; height: 400px; background: rgba(91,106,255,0.07); bottom: 200px; left: -100px; }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 64px 0 80px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,229,160,0.1);
+    border: 1px solid rgba(0,229,160,0.3);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-size: clamp(44px, 8vw, 76px);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+  }
+
+  h1 span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .tagline {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 480px;
+    line-height: 1.6;
+    margin-bottom: 36px;
+    font-weight: 400;
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-num {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text);
+    font-family: var(--mono);
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── SECTION TITLES ── */
+  .section {
+    padding: 72px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent2);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .section-sub {
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 48px;
+    max-width: 520px;
+    line-height: 1.6;
+  }
+
+  /* ── SYSTEMS GRID ── */
+  .systems-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 640px) {
+    .systems-grid { grid-template-columns: 1fr; }
+  }
+
+  .system-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: default;
+  }
+
+  .system-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--card-accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .system-card:hover {
+    border-color: var(--border2);
+    transform: translateY(-2px);
+  }
+
+  .system-card:hover::before { opacity: 1; }
+
+  .system-card.featured {
+    grid-column: span 2;
+    background: linear-gradient(135deg, rgba(0,229,160,0.05), rgba(91,106,255,0.05));
+    border-color: rgba(0,229,160,0.2);
+  }
+
+  @media (max-width: 640px) {
+    .system-card.featured { grid-column: span 1; }
+  }
+
+  .card-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+  }
+
+  .tag-save { background: rgba(0,229,160,0.12); color: var(--accent); border: 1px solid rgba(0,229,160,0.25); }
+  .tag-economy { background: rgba(255,107,107,0.12); color: var(--accent3); border: 1px solid rgba(255,107,107,0.25); }
+  .tag-security { background: rgba(91,106,255,0.12); color: #8b96ff; border: 1px solid rgba(91,106,255,0.25); }
+  .tag-rewards { background: rgba(255,200,80,0.12); color: #ffc850; border: 1px solid rgba(255,200,80,0.25); }
+  .tag-prestige { background: rgba(200,100,255,0.12); color: #cc88ff; border: 1px solid rgba(200,100,255,0.25); }
+  .tag-enchant { background: rgba(255,150,50,0.12); color: #ff9640; border: 1px solid rgba(255,150,50,0.25); }
+
+  .card-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 20px;
+  }
+
+  /* ── CODE SNIPPET ── */
+  .code-block {
+    background: #0d0f14;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.8;
+    overflow-x: auto;
+    position: relative;
+  }
+
+  .code-block::before {
+    content: attr(data-label);
+    position: absolute;
+    top: 10px; right: 12px;
+    font-size: 9px;
+    color: var(--muted2);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .kw { color: #8b96ff; }
+  .fn { color: var(--accent); }
+  .str { color: #ffc850; }
+  .cm { color: #444d5e; }
+  .num { color: var(--accent3); }
+  .var { color: #e8c4ff; }
+
+  /* ── SELLING POINTS ── */
+  .points-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .points-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .points-list li::before {
+    content: '→';
+    color: var(--accent);
+    font-family: var(--mono);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── SERVICES ── */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  @media (max-width: 600px) {
+    .services-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .service-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
+  }
+
+  .service-icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .service-name {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .service-price {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+  }
+
+  /* ── CONTACT ── */
+  .contact-box {
+    background: linear-gradient(135deg, rgba(0,229,160,0.08), rgba(91,106,255,0.08));
+    border: 1px solid rgba(0,229,160,0.2);
+    border-radius: 20px;
+    padding: 48px 40px;
+    text-align: center;
+  }
+
+  .contact-title {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+
+  .contact-sub {
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 32px;
+  }
+
+  .discord-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #5865F2;
+    color: white;
+    text-decoration: none;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 15px;
+    font-family: var(--display);
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .discord-btn:hover {
+    background: #4752C4;
+    transform: translateY(-2px);
+  }
+
+  .discord-username {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 16px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 32px 0;
+    text-align: center;
+  }
+
+  footer p {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted2);
+    letter-spacing: 0.06em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up {
+    animation: fadeUp 0.6s ease forwards;
+    opacity: 0;
+  }
+
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+  .delay-4 { animation-delay: 0.4s; }
+</style>
+</head>
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="container">
+    <div class="badge fade-up">Available for commissions</div>
+    <h1 class="fade-up delay-1">Clean.<br><span>Fast.</span><br>Roblox Scripts.</h1>
+    <p class="tagline fade-up delay-2">
+      Production-ready Luau systems with real DataStore safety, exploit-proof logic, and fast turnaround. Built for games that need to last.
+    </p>
+    <div class="header-stats fade-up delay-3">
+      <div class="stat">
+        <span class="stat-num">24h</span>
+        <span class="stat-label">Avg. Delivery</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">6+</span>
+        <span class="stat-label">Core Systems</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">$5+</span>
+        <span class="stat-label">Starting Rate</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── PORTFOLIO SYSTEMS ── -->
+<section class="section">
+  <div class="container">
+    <div class="section-label">Portfolio</div>
+    <h2 class="section-title">What I've Built</h2>
+    <p class="section-sub">Real systems from a published Roblox game — not demos, not tutorials. Production code.</p>
+
+    <div class="systems-grid">
+
+      <!-- FEATURED: DataStore Save System -->
+      <div class="system-card featured" style="--card-accent: var(--accent);">
+        <span class="card-tag tag-save">★ Flagship System</span>
+        <h3 class="card-title">ProfileService DataStore Save System</h3>
+        <p class="card-desc">
+          Complete save/load pipeline using ProfileService — the gold standard for Roblox DataStores. Session-locked profiles, auto-save every 30s, and a strict serialization order that prevents data loss on server shutdown. Saves pets, eggs, enchants, potion timers, rank, currency, and offline state — all in the correct order before profile:Release().
+        </p>
+        <div class="code-block" data-label="PlayerDataService.lua">
+<span class="cm">-- Serialization order matters — barn data MUST be written</span>
+<span class="cm">-- before profile:Release() or race conditions drop items.</span>
+<span class="kw">function</span> <span class="fn">PlayerDataService:ReleasePlayer</span>(<span class="var">player</span>)
+  <span class="kw">local</span> <span class="var">profile</span> = <span class="var">self</span>.Profiles[<span class="var">player</span>.UserId]
+  <span class="kw">if not</span> <span class="var">profile</span> <span class="kw">then return end</span>
+  <span class="fn">self:SyncCurrencyFromAttributes</span>(<span class="var">player</span>)  <span class="cm">-- 1. live Money/Gems</span>
+  <span class="fn">self:_SerializePets</span>(<span class="var">player</span>, <span class="var">data</span>)           <span class="cm">-- 2. all pets + enchants</span>
+  <span class="fn">self:_SerializeEggs</span>(<span class="var">player</span>, <span class="var">data</span>)           <span class="cm">-- 3. hatch progress</span>
+  <span class="fn">self:_SerializePendingEnchants</span>(<span class="var">player</span>, <span class="var">data</span>) <span class="cm">-- 4. mid-apply timers</span>
+  <span class="fn">self:_SerializeActivePotionEffects</span>(<span class="var">player</span>, <span class="var">data</span>) <span class="cm">-- 5. potion timers</span>
+  <span class="var">profile</span>:<span class="fn">Release</span>()  <span class="cm">-- 6. FINAL write — all data guaranteed safe</span>
+<span class="kw">end</span>
+        </div>
+        <ul class="points-list">
+          <li>Potion timers pause offline — stored as timeRemaining, not an expiry timestamp</li>
+          <li>Mid-apply enchants resume on rejoin from exact remaining seconds</li>
+          <li>Race condition fix: PDS waits for ProfileService before any Add() calls</li>
+        </ul>
+      </div>
+
+      <!-- BigNumber Currency -->
+      <div class="system-card" style="--card-accent: var(--accent3);">
+        <span class="card-tag tag-economy">Economy</span>
+        <h3 class="card-title">BigNumber Currency System</h3>
+        <p class="card-desc">
+          Handles currency from $1 to $5 Trillion without floating-point loss. Stores values as m×10^e internally, writes "m,e" to attributes so GetAttributeChangedSignal fires on every real change — not broken by abbreviation collisions like "1.25M".
+        </p>
+        <div class="code-block" data-label="CurrencyService.lua">
+<span class="cm">-- "m,e" format: 1,250,000 stored as "1.25,6"</span>
+<span class="cm">-- Fires AttributeChanged on every real addition</span>
+<span class="kw">function</span> <span class="fn">CurrencyService:Add</span>(<span class="var">player</span>, <span class="var">currency</span>, <span class="var">amount</span>)
+  <span class="kw">local</span> <span class="var">current</span> = <span class="fn">self:Get</span>(<span class="var">player</span>, <span class="var">currency</span>)
+  <span class="var">current</span>:<span class="fn">Add</span>(<span class="var">amount</span>)
+  <span class="fn">self:Set</span>(<span class="var">player</span>, <span class="var">currency</span>, <span class="var">current</span>)
+<span class="kw">end</span>
+
+<span class="kw">function</span> <span class="fn">CurrencyService:Subtract</span>(<span class="var">p</span>, <span class="var">c</span>, <span class="var">amount</span>)
+  <span class="kw">if not</span> <span class="fn">self:CanAfford</span>(<span class="var">p</span>, <span class="var">c</span>, <span class="var">amount</span>) <span class="kw">then return false end</span>
+  <span class="cm">-- server-side check — exploit-safe</span>
+  <span class="kw">local</span> <span class="var">neg</span> = BigNumber.<span class="fn">new</span>(-<span class="var">amount</span>.m, <span class="var">amount</span>.e)
+  <span class="fn">self:Get</span>(<span class="var">p</span>, <span class="var">c</span>):<span class="fn">Add</span>(<span class="var">neg</span>)
+  <span class="kw">return true</span>
+<span class="kw">end</span>
+        </div>
+        <ul class="points-list">
+          <li>Handles values up to 5 Trillion — idle game scale</li>
+          <li>HUD always updates — no silent signal misses from abbreviation collisions</li>
+        </ul>
+      </div>
+
+      <!-- Hatch Timer -->
+      <div class="system-card" style="--card-accent: #8b96ff;">
+        <span class="card-tag tag-security">Exploit-Proof</span>
+        <h3 class="card-title">Server-Authoritative Hatch Timer</h3>
+        <p class="card-desc">
+          VirtualElapsed is the single source of truth for egg hatch progress — written only by the server tick loop. Speed potions are applied server-side too. Clients cannot fake progress. Offline hatch credit is applied at 30% speed, capped at 12 hours, on rejoin.
+        </p>
+        <div class="code-block" data-label="CharacterHandler.lua">
+<span class="cm">-- Server is SOLE writer of VirtualElapsed.</span>
+<span class="cm">-- Client reads it but never writes — exploit-safe.</span>
+<span class="kw">while</span> <span class="var">egg</span>:<span class="fn">GetAttribute</span>(<span class="str">"IsPlacedEgg"</span>) <span class="kw">do</span>
+  task.<span class="fn">wait</span>(<span class="num">1</span>)
+  <span class="kw">if</span> <span class="var">egg</span>:<span class="fn">GetAttribute</span>(<span class="str">"HatchPaused"</span>) <span class="kw">then continue end</span>
+  <span class="kw">local</span> <span class="var">mult</span> = <span class="var">owner</span>:<span class="fn">GetAttribute</span>(<span class="str">"HatchSpeedMultiplier"</span>)
+  <span class="kw">local</span> <span class="var">ve</span> = <span class="var">egg</span>:<span class="fn">GetAttribute</span>(<span class="str">"VirtualElapsed"</span>) + <span class="num">1</span> * <span class="var">mult</span>
+  <span class="var">egg</span>:<span class="fn">SetAttribute</span>(<span class="str">"VirtualElapsed"</span>, <span class="var">ve</span>)
+  <span class="kw">if</span> <span class="var">ve</span> >= <span class="var">egg</span>:<span class="fn">GetAttribute</span>(<span class="str">"HatchDuration"</span>) <span class="kw">then</span>
+    <span class="var">egg</span>:<span class="fn">SetAttribute</span>(<span class="str">"ReadyToHatch"</span>, <span class="kw">true</span>)
+    <span class="fn">HatchCompleted</span>:<span class="fn">Fire</span>(<span class="var">egg</span>, <span class="var">owner</span>); <span class="kw">break</span>
+  <span class="kw">end</span>
+<span class="kw">end</span>
+        </div>
+        <ul class="points-list">
+          <li>5x speed potion = 5 VirtualElapsed seconds per real second</li>
+          <li>Offline progress: 30% credit on rejoin, max 12hr window</li>
+        </ul>
+      </div>
+
+      <!-- Daily/Hourly Rewards -->
+      <div class="system-card" style="--card-accent: #ffc850;">
+        <span class="card-tag tag-rewards">Retention</span>
+        <h3 class="card-title">Daily & Hourly Rewards System</h3>
+        <p class="card-desc">
+          30-day rolling streak calendar + session-based hourly track. Server-authoritative claiming with a processingClaim guard to prevent duplicate fires. Client never optimistically updates — waits for server confirmation before toasting.
+        </p>
+        <div class="code-block" data-label="RewardService.lua">
+<span class="cm">-- processingClaim guard prevents duplicate claims</span>
+<span class="cm">-- if client fires the remote twice before server responds.</span>
+ClaimDaily.OnServerEvent:<span class="fn">Connect</span>(<span class="kw">function</span>(<span class="var">player</span>, <span class="var">day</span>)
+  <span class="kw">if</span> <span class="var">processingClaim</span>[<span class="var">player</span>.UserId] <span class="kw">then return end</span>
+  <span class="var">processingClaim</span>[<span class="var">player</span>.UserId] = <span class="kw">true</span>
+  <span class="cm">-- validate, give reward, save streak...</span>
+  RewardStateUpdate:<span class="fn">FireClient</span>(<span class="var">player</span>, <span class="str">"daily"</span>, <span class="fn">buildDailyState</span>(<span class="var">player</span>))
+  <span class="var">processingClaim</span>[<span class="var">player</span>.UserId] = <span class="kw">false</span>
+<span class="kw">end</span>)
+        </div>
+        <ul class="points-list">
+          <li>ProfileService timing fix — waits for PDS before any inventory writes</li>
+          <li>Streak persists across servers, hourly resets per session</li>
+          <li>Barn capacity check before spawning egg rewards</li>
+        </ul>
+      </div>
+
+      <!-- Rank/Prestige -->
+      <div class="system-card" style="--card-accent: #cc88ff;">
+        <span class="card-tag tag-prestige">Progression</span>
+        <h3 class="card-title">Rank / Prestige System</h3>
+        <p class="card-desc">
+          13-rank prestige loop. Each rank-up validates currency + pet requirements, wipes the entire barn, rebuilds stands, and applies permanent multiplier buffs. Rank data persists immediately to ProfileService — survives server restarts.
+        </p>
+        <ul class="points-list">
+          <li>Rank multipliers stack multiplicatively with potions and gamepasses</li>
+          <li>+0.5x Money/Gem multiplier per rank — up to 13x at Legend</li>
+          <li>BarnLockTime increases per rank — social protection mechanic</li>
+          <li>Serializes to DataStore on rank-up AND on leave — no data loss</li>
+        </ul>
+      </div>
+
+      <!-- Enchant Resume -->
+      <div class="system-card" style="--card-accent: #ff9640;">
+        <span class="card-tag tag-enchant">Persistence</span>
+        <h3 class="card-title">Enchant Resume on Rejoin</h3>
+        <p class="card-desc">
+          Enchants take up to 15 minutes to apply. If a player disconnects mid-apply, the remaining time is serialized and the enchant resumes exactly where it left off on the next join.
+        </p>
+        <div class="code-block" data-label="PlayerDataService.lua">
+<span class="cm">-- Saves exact TimeRemaining for mid-apply enchants.</span>
+<span class="cm">-- On rejoin, EnchantService.ResumeApplying() picks up</span>
+<span class="cm">-- from the saved seconds — never restarts from zero.</span>
+<span class="kw">if</span> <span class="var">pet</span>:<span class="fn">GetAttribute</span>(<span class="str">"ApplyingEnchant"</span>) == <span class="kw">true then</span>
+  <span class="kw">local</span> <span class="var">expiry</span> = <span class="var">pet</span>:<span class="fn">GetAttribute</span>(<span class="str">"ApplyingEnchantExpiry"</span>)
+  <span class="kw">local</span> <span class="var">remaining</span> = math.<span class="fn">max</span>(<span class="num">0</span>, <span class="var">expiry</span> - os.<span class="fn">time</span>())
+  <span class="kw">if</span> <span class="var">remaining</span> > <span class="num">0</span> <span class="kw">then</span>
+    table.<span class="fn">insert</span>(<span class="var">saved</span>, { PetName = <span class="var">pet</span>.Name,
+      EnchantName = <span class="var">pet</span>:<span class="fn">GetAttribute</span>(<span class="str">"ApplyingEnchantName"</span>),
+      TimeRemaining = <span class="var">remaining</span>, StandIndex = <span class="var">standIdx</span> })
+  <span class="kw">end</span>
+<span class="kw">end</span>
+        </div>
+        <ul class="points-list">
+          <li>StandIndex saved — resumes on exact pet, not first same-name match</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section class="section">
+  <div class="container">
+    <div class="section-label">Services</div>
+    <h2 class="section-title">What I Offer</h2>
+    <p class="section-sub">Clean, commented, production-ready Luau. Every script comes with a setup guide.</p>
+
+    <div class="services-grid">
+      <div class="service-item">
+        <span class="service-icon">💾</span>
+        <div class="service-name">DataStore Setup</div>
+        <div class="service-price">from $20</div>
+      </div>
+      <div class="service-item">
+        <span class="service-icon">🎁</span>
+        <div class="service-name">Daily Rewards</div>
+        <div class="service-price">from $15</div>
+      </div>
+      <div class="service-item">
+        <span class="service-icon">🏆</span>
+        <div class="service-name">Rank / Prestige</div>
+        <div class="service-price">from $25</div>
+      </div>
+      <div class="service-item">
+        <span class="service-icon">🛒</span>
+        <div class="service-name">Shop + Currency</div>
+        <div class="service-price">from $15</div>
+      </div>
+      <div class="service-item">
+        <span class="service-icon">⚔️</span>
+        <div class="service-name">Combat Systems</div>
+        <div class="service-price">from $20</div>
+      </div>
+      <div class="service-item">
+        <span class="service-icon">🐾</span>
+        <div class="service-name">Pet / Following AI</div>
+        <div class="service-price">from $10</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section class="section" style="border-bottom: none;">
+  <div class="container">
+    <div class="contact-box">
+      <h2 class="contact-title">Ready to start?</h2>
+      <p class="contact-sub">Send me your requirements on Discord. I'll reply within a few hours with a plan and price.</p>
+      <a href="#" class="discord-btn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+        DM on Discord
+      </a>
+      <p class="discord-username">Find me on RoDevs server</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>RapidDev · Roblox Luau Developer · Fast delivery · Clean code</p>
+  </div>
+</footer>
+
+</body>
+</html>
